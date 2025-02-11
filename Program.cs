@@ -4,6 +4,23 @@ using WishlistService.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+//// Retrieve DB password from environment variable
+//var dbPassword = Environment.GetEnvironmentVariable("DB_PASSWORD");
+//Console.WriteLine($"Password: {dbPassword}");
+
+//if (string.IsNullOrEmpty(dbPassword))
+//{
+//    throw new Exception("Environment variable DB_PASSWORD is not set.");
+//}
+
+//// Replace {DB_PASSWORD} in the connection string
+//var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+//    .Replace("{DB_PASSWORD}", dbPassword);
+
+//Console.WriteLine($"Final Connection String: {connectionString}"); // Debugging purpose
+
+
 // Register Wishlist Service with HttpClient
 builder.Services.AddHttpClient<WishlistServiceClass>();
 builder.Services.AddScoped<WishlistServiceClass>();
