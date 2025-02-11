@@ -87,9 +87,9 @@ namespace CartService.Service {
 
 
         // Add a book to the cart
-        public async Task<bool> AddBookToCart(int customerId, int bookId)
+        public async Task<bool> AddBookToCart(int customerId, int bookId, int quantity)
         {
-            return await _utilityService.AddBookToCart(customerId, bookId);
+            return await _utilityService.AddBookToCart(customerId, bookId, quantity);
 
         }
 

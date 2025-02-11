@@ -57,10 +57,10 @@ namespace CartService.Controllers
 
 
         // Add book to the cart
-        [HttpPost("add-cart/{customerId}/{bookId}")]
-        public async Task<IActionResult> AddBookToCart(int customerId, int bookId)
+        [HttpPost("add-cart/{customerId}/{bookId}/{quantity}")]
+        public async Task<IActionResult> AddBookToCart(int customerId, int bookId,int quantity)
         {
-            bool success = await _service.AddBookToCart(customerId, bookId);
+            bool success = await _service.AddBookToCart(customerId, bookId,quantity);
 
             if (success)
             {

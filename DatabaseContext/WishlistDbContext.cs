@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using CartService.Entity;
+using Microsoft.EntityFrameworkCore;
 using WishlistService.Entity;
 
 namespace WishlistService.DatabaseContext
@@ -8,7 +9,9 @@ namespace WishlistService.DatabaseContext
         public WishlistDbContext(DbContextOptions<WishlistDbContext> options) : base(options) { }
 
         public DbSet<Wishlist> Wishlists { get; set; }
-        public object Cart { get; internal set; }
+        //public object Cart { get; internal set; }
+        public DbSet<Cart> Carts { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

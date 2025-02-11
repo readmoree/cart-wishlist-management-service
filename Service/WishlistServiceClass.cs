@@ -120,7 +120,7 @@ namespace WishlistService.Service
             else
             {
                 // Step 4: If book is not in cart, add it as a new entry
-                bool addToCart = await _utilityService.AddBookToCart(customerId, bookId);
+                bool addToCart = await _utilityService.AddBookToCart(customerId, bookId,1);
                 return addToCart; // Return true if adding to the cart is successful
             }
         }

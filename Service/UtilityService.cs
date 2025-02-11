@@ -93,7 +93,7 @@ namespace WishlistService.Service
 
 
         // Add a book to the cart (increase quantity if it exists)
-        public async Task<bool> AddBookToCart(int customerId, int bookId)
+        public async Task<bool> AddBookToCart(int customerId, int bookId, int quantity)
         {
             using (var connection = new MySqlConnection(_connectionString))
             {
@@ -111,7 +111,7 @@ namespace WishlistService.Service
 
                     if (result != null)
                     {
-                        int newQuantity = (int)result + 1;
+                        int newQuantity = (int)result + quantity;
 
                         // Update quantity if the book is already in the cart
                         string updateQuery = "UPDATE Cart SET Quantity = @Quantity WHERE CustomerId = @CustomerId AND BookId = @BookId";
@@ -128,26 +128,43 @@ namespace WishlistService.Service
                 }
 
                 // Insert new book into the cart if it doesn’t exist
-                string insertQuery = "INSERT INTO Cart (CustomerId, BookId, Quantity) VALUES (@CustomerId, @BookId, 1)";
+                string insertQuery = "INSERT INTO Cart (CustomerId, BookId, Quantity) VALUES (@CustomerId, @BookId, @Quantity)";
 
                 using (var insertCommand = new MySqlCommand(insertQuery, connection))
                 {
                     insertCommand.Parameters.AddWithValue("@CustomerId", customerId);
                     insertCommand.Parameters.AddWithValue("@BookId", bookId);
-
+                    insertCommand.Parameters.AddWithValue("@Quantity", quantity);
                     return await insertCommand.ExecuteNonQueryAsync() > 0;
                 }
             }
         }
 
 
-        // Add a Book to the wishlist
+        // Add a Book to the Wishlist (Check if it already exists)
         public async Task<bool> AddBookToWishlist(int customerId, int bookId)
         {
             using (var connection = new MySqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
 
+                // Step 1: Check if the book already exists in the Wishlist
+                string checkQuery = "SELECT COUNT(*) FROM Wishlist WHERE CustomerId = @CustomerId AND BookId = @BookId";
+
+                using (var checkCommand = new MySqlCommand(checkQuery, connection))
+                {
+                    checkCommand.Parameters.AddWithValue("@CustomerId", customerId);
+                    checkCommand.Parameters.AddWithValue("@BookId", bookId);
+
+                    int count = Convert.ToInt32(await checkCommand.ExecuteScalarAsync());
+
+                    if (count > 0)
+                    {
+                        return false; // Book already exists in wishlist
+                    }
+                }
+
+                // Step 2: Insert the book into the Wishlist
                 string insertQuery = "INSERT INTO Wishlist (CustomerId, BookId) VALUES (@CustomerId, @BookId)";
 
                 using (var insertCommand = new MySqlCommand(insertQuery, connection))
@@ -160,7 +177,8 @@ namespace WishlistService.Service
             }
         }
 
-       
+
+
         // Get the quantity of the cart
         public async Task<int> GetCartQuantity(int customerId, int bookId)
         {
