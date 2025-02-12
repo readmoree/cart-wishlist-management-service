@@ -56,8 +56,8 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-var port = Environment.GetEnvironmentVariable("PORT") ?? "10000"; // Use Render’s PORT variable
-app.Urls.Add($"http://0.0.0.0:{port}");
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080"; // Use Render’s PORT variable
+app.Urls.Add($"http://*:{port}");
 
 // Use Swagger in Development Environment
 if (app.Environment.IsDevelopment())
